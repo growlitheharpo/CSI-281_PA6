@@ -5,17 +5,16 @@
 
 using namespace std;
 
-const char LOWEST_CHARACTER_VALUE = '"';
-const string INVALID_WORD = "-999";
-const int NUMBER_OF_LETTERS_IN_ENGLISH = (128 - LOWEST_CHARACTER_VALUE);
-
 class AlphabetTree
 {
 	private:
-		char myLetter;
+		char myLowestBranch, myLetter;
 		char* myCode; //used if this is the termination point of a word
+		int myArraySize;
 
-		AlphabetTree *myChildren[NUMBER_OF_LETTERS_IN_ENGLISH];
+		AlphabetTree **myChildren;
+
+		void shiftMyChildren(char newLow);
 
 	public:
 		AlphabetTree();
