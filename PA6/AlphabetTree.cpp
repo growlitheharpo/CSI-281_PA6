@@ -5,7 +5,7 @@ void AlphabetTree::shiftMyChildren(char newLow)
 	AlphabetTree **newChildren;
 	int i;
 
-	newChildren = new AlphabetTree*[123 - newLow];
+	newChildren = new AlphabetTree*[HIGHEST_USED_ASCII_VALUE - newLow];
 
 	for (i = 0; i < (myLowestBranch - newLow); i++)
 		newChildren[i] = NULL;
@@ -17,7 +17,7 @@ void AlphabetTree::shiftMyChildren(char newLow)
 	myChildren = newChildren;
 
 	myLowestBranch = newLow;
-	myArraySize = 123 - newLow;
+	myArraySize = HIGHEST_USED_ASCII_VALUE - newLow;
 }
 
 AlphabetTree::AlphabetTree()
@@ -38,16 +38,8 @@ AlphabetTree::AlphabetTree(char l)
 	myLetter = l;
 	myCode = NULL;
 
-	if (l < 'a')
-	{
-		myLowestBranch = l;
-		myArraySize = 123 - l; //123 instead of 128 b/c the last 5 ASCII characters won't be used
-	}
-	else
-	{
-		myArraySize = 26;
-		myLowestBranch = 'a';
-	}
+	myLowestBranch = l;
+	myArraySize = HIGHEST_USED_ASCII_VALUE - l; //123 instead of 128 b/c the last 5 ASCII characters won't be used
 
 	myChildren = new AlphabetTree*[myArraySize];
 
@@ -74,9 +66,12 @@ char* AlphabetTree::doSearch(const string &word, int currentIndex)
 {
 	if (currentIndex == word.length())
 	{
+		if (myCode == NULL)
+			return const_cast<char *>(word.c_str());
+
 		return myCode;
 	}
-	else if (myChildren[word[currentIndex] - myLowestBranch] == NULL)
+	else if (word[currentIndex] - myLowestBranch < 0 || myChildren[word[currentIndex] - myLowestBranch] == NULL)
 	{
 		return const_cast<char *>(word.c_str());
 	}

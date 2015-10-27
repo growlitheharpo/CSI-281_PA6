@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const int HIGHEST_USED_ASCII_VALUE = 123;
+
 class AlphabetTree
 {
 	private:
