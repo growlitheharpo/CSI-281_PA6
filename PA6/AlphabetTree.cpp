@@ -35,6 +35,9 @@ char* AlphabetTree::doSearch(const string &word, int currentIndex)
 {
 	if (currentIndex == word.length())
 	{
+		if (myCode == NULL)
+			return const_cast<char *>(word.c_str());
+
 		return myCode;
 	}
 	else if (myChildren[word[currentIndex] - LOWEST_CHARACTER_VALUE] == NULL)
@@ -52,9 +55,12 @@ char* AlphabetTree::doSearch(const char* word, int currentIndex, int length)
 {
 	if (currentIndex == length)
 	{
+		if (myCode == NULL)
+			return const_cast<char *>(word);
+
 		return myCode;
 	}
-	else if (myChildren[word[currentIndex] - LOWEST_CHARACTER_VALUE] == NULL)
+	else if (word[currentIndex] - LOWEST_CHARACTER_VALUE < 0 || myChildren[word[currentIndex] - LOWEST_CHARACTER_VALUE] == NULL)
 	{
 		return const_cast<char *>(word);
 	}
