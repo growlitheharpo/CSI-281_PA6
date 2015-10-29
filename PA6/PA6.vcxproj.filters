@@ -39,4 +39,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="codes.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="king_james_bible_source.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="simple_paragraph_source.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="war_and_peace_source.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

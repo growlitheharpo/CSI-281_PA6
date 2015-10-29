@@ -74,6 +74,12 @@
     <ClInclude Include="header.h" />
     <ClInclude Include="timerSystem.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="codes.txt" />
+    <Text Include="king_james_bible_source.txt" />
+    <Text Include="simple_paragraph_source.txt" />
+    <Text Include="war_and_peace_source.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
