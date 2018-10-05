@@ -94,14 +94,14 @@ AlphabetTree::~AlphabetTree()
 *			it in the code because it is a very good explanation of what is logically
 *			occuring during a search.
 *********************************************************************************************/
-char* AlphabetTree::doSearchRecursive(const char* word, int currentIndex, int length)
+const char* AlphabetTree::doSearchRecursive(const char* word, int currentIndex, int length)
 {
 	//If we're at the end of the word
 	if (currentIndex == length)
 	{
 		//If my code doesn't exist, this is an invalid word. Return the word itself.
 		if (myCode == NULL)
-			return const_cast<char *>(word);
+			return word;
 
 		//else, return the code
 		return myCode;
@@ -110,7 +110,7 @@ char* AlphabetTree::doSearchRecursive(const char* word, int currentIndex, int le
 	{
 		//If we find a NULL branch, or we're trying to access an invalid branch,
 		//the word is invalid. Return the word itself.
-		return const_cast<char *>(word);
+		return word;
 	}
 	else
 	{
@@ -125,7 +125,7 @@ char* AlphabetTree::doSearchRecursive(const char* word, int currentIndex, int le
 *      Pre: Handed the word, and the length of the word.
 *	  Post: Returns the code if the word is valid, or the word passed in if it is invalid.
 *********************************************************************************************/
-char* AlphabetTree::doSearchIterative(const char* word, int length)
+const char* AlphabetTree::doSearchIterative(const char* word, int length)
 {
 	AlphabetTree *currentLeaf = this;
 	int arrayIndex, wordIndex = 0;
@@ -138,7 +138,7 @@ char* AlphabetTree::doSearchIterative(const char* word, int length)
 
 		//If that child doesn't exist or it would be out of range, return the word itself.
 		if (arrayIndex < 0 || currentLeaf->myChildren[arrayIndex] == NULL)
-			return const_cast<char *>(word);
+			return word;
 
 		//Otherwise, move to the next leaf.
 		currentLeaf = currentLeaf->myChildren[arrayIndex];
@@ -158,39 +158,35 @@ char* AlphabetTree::doSearchIterative(const char* word, int length)
 *      Pre: Handed the new word, and the code.
 *	  Post: The tree is succesfully updated with the new word and code.
 *********************************************************************************************/
-void AlphabetTree::addWord(string &newWord, const string &wordCode)
+void AlphabetTree::addWord(const char *newWord, const char *wordCode, int index)
 {
-	if (newWord.length() == 0)
+	if (newWord[index] == '\0')
 	{
-		//Shouldn't ever enter this if statement, but maybe we're updating a code
-		if (this->myCode != NULL)
-			delete myCode;
+		//Shouldn't ever need this if statement, but maybe we're updating a code
+		delete myCode;
 
 		//Copy the code from std::string to C character buffer (faster!)
-		this->myCode = new char[wordCode.size() + 1];
-		this->myCode[wordCode.size()] = 0;	//null terminator
-		memcpy(this->myCode, wordCode.c_str(), wordCode.size());
+		int codeLength = strlen(wordCode);
+		this->myCode = new char[codeLength];
+		memcpy(this->myCode, wordCode, codeLength);
 	}
 	else
 	{
 		//find the index of this letter in myChildren
-		int letterIndex = newWord[0] - myLowestBranch; 
+		int letterIndex = newWord[index] - myLowestBranch;
 
 		//If we're out of range, shift myChildren
 		if (letterIndex < 0)
 		{
-			shiftMyChildren(newWord[0]);
+			shiftMyChildren(newWord[index]);
 			letterIndex = 0;
 		}
 
 		//If this branch doesn't exist yet, create it.
-		if (myChildren[letterIndex] == NULL)
-		{
+		if (myChildren[letterIndex] == nullptr)
 			myChildren[letterIndex] = new AlphabetTree();
-		}
 
 		//Clear the first letter, and then recursively add that word to the correct child.
-		newWord.erase(0, 1);
-		myChildren[letterIndex]->addWord(newWord, wordCode);
+		myChildren[letterIndex]->addWord(newWord, wordCode, index + 1);
 	}
 }

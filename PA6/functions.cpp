@@ -33,36 +33,38 @@ retain a copy of this assignment on its database for the purpose of future plagi
 *********************************************************************************************/
 double encryptFile(AlphabetTree &treeRoot, const string &source, const string &target)
 {
-	ifstream fin(source);
+	// On my computer, with my compiler, C-style is faster for input but C++-style is faster
+	// for output. Who knows why.
+
+	FILE* fin;
 	ofstream fout(target);
-	string tmp = "";
-	char *returnedValue;
+	const char *returnedValue;
+	char tmp_word[128];
 
 	double time;
 	TimerSystem timer;
 
-	if (!fin.good() || !fout.good())
+	fopen_s(&fin, source.c_str(), "r");
+
+	if (fin == nullptr || !fout.good())
 	{
-		fin.close();
+		fclose(fin);
 		fout.close();
 		return -1.0;
 	}
 
 	timer.startClock();
-	fin >> tmp;
-	do
+	while (fscanf_s(fin, "%s", tmp_word, 128) != EOF)
 	{
 		//turns out, converting to c_string is significantly faster
-		returnedValue = treeRoot.doSearchIterative(tmp.c_str(), tmp.length());
+		returnedValue = treeRoot.doSearchIterative(tmp_word, strlen(tmp_word));
 
 		fout << returnedValue << " ";
-		fin >> tmp;
-
-	} while (!fin.eof());
+	};
 
 	time = timer.getTime();
 
-	fin.close();
+	fclose(fin);
 	fout.close();
 
 	return time;
@@ -111,32 +113,29 @@ bool getFileNames(string &input, string &output)
 *********************************************************************************************/
 double loadData(AlphabetTree & rootNode)
 {
-	string tmpWord;
-	string tmpCode;
+	char tmpWord[46];
+	char tmpCode[8];
 	TimerSystem timer;
 	double time;
 
-	ifstream fin;
-	fin.open(CODES_FILE);
+	FILE* fin;
+	fopen_s(&fin, CODES_FILE.c_str(), "r");
 
-	if (!fin.good())
+	if (fin == nullptr)
 	{
-		fin.close();
 		return -1.0;
 	}
 
 	timer.startClock();
 
-	fin >> tmpWord >> tmpCode;
-	while (!fin.eof())
+	while (fscanf_s(fin, "%s %s", tmpWord, 46, tmpCode, 8) != EOF)
 	{
-		rootNode.addWord(tmpWord, tmpCode);
-		fin >> tmpWord >> tmpCode;
+		rootNode.addWord(tmpWord, tmpCode, 0);
 	}
 
 	time = timer.getTime();
 
-	fin.close();
+	fclose(fin);
 
 	return time;
 }

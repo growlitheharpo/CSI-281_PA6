@@ -40,9 +40,9 @@ class AlphabetTree
 		AlphabetTree();
 		~AlphabetTree();
 
-		char* doSearchRecursive(const char* word, int currentIndex, int length);
-		char* doSearchIterative(const char* word, int length);
-		void addWord(string &newWord, const string &wordCode);
+		const char* doSearchRecursive(const char* word, int currentIndex, int length);
+		const char* doSearchIterative(const char* word, int length);
+		void addWord(const char* newWord, const char *wordCode, int index);
 };
 
 #endif
